@@ -1,0 +1,180 @@
+1.    On the big dataset, what were the top 20 words by relevance
+ for each of these n-grams, and funcNum pairs:
+ ("jurisdiction", 0), ("court order", 1) ("in my opinion", 2)?
+
+("jurisdiction", 0):
+1 117.86215489435645	948d
+2 85.61828149338308	unwarrantable
+3 68.63618949488759	469a
+4 55.161125384567285	dcourty
+5 52.215895577663545	mannanneri
+6 49.56658619079467	rovided
+7 48.95560307123129	jurisconsults
+8 44.77441174511995	jurisd
+9 43.1101579283977	shouba
+10 42.74678091112799	gupvi
+11 40.49449783788762	yadeinu
+12 40.49449783788762	tahaht
+13 40.49449783788762	shiname
+14 34.55770340170768	garnishee
+15 30.880826402115943	laarf
+16 30.440305203142977	therof
+17 24.45659043933811	deferring
+18 24.1897174218863	ccc
+19 24.14688507565315	a0mandatory
+20 21.631283428124803	extraterritorial
+21 21.313577727291484	personem
+
+_______________________________
+("court order" 1):
+1 1302.916101197547	order before
+2 1131.044706123935	wiretap requires
+3 962.4671833912518	a court
+4 896.6568660646913	a wiretap
+5 860.2171909484528	wiretap it
+6 855.2935992866583	order nothing
+7 819.1214162153937	about wiretap
+8 482.4934405771356	order warrant
+9 326.11716278445624	under court
+10 303.0957463019463	about getting
+11 302.3880619182392	warrant subpoena
+12 290.8876809859564	by court
+13 272.93239974922284	subpoena statutory
+14 267.1772151327143	order stipulates
+15 264.2769110068665	requires a
+16 257.6668160102562	ii obtains
+17 246.00302170166083	if prohibited
+18 238.85259157689728	d requirements
+19 232.5296101716141	it requires
+20 227.57346421546038	disclosure under
+21 211.69559400493117	incarcerated person
+________
+(in my opinion, 2):
+1 6208.917318715929	netnews around the
+2 5893.699027855425	on news traffic
+3 5892.165374883242	influence on news
+4 4473.6996157206695	vielmetti all rights
+5 4472.726126072433	edward vielmetti all
+6 4471.752590078276	1996 edward vielmetti
+7 4470.779007726395	copyright 1996 edward
+8 4469.8053790049935	doering copyright 1996
+9 4468.83170390226	gert doering copyright
+10 4467.857982406379	www gert doering
+11 4466.884214505531	des www gert
+12 4465.910400187892	anhaengsel des www
+13 4464.936539441629	klickbares anhaengsel des
+14 4463.962632254903	nicht klickbares anhaengsel
+15 4462.988678615876	kein nicht klickbares
+16 4462.014678512693	und kein nicht
+17 4461.040631933506	war und kein
+18 4460.06653886645	usenet war und
+19 4459.092399299661	noch usenet war
+20 4458.118213221269	usenet noch usenet
+21 4457.143980619397	das usenet noch
+
+
+
+
+2.    How long did each run of program take on each number of instances?
+ How many mappers, and how many reducers did you use?
+
+For 5 workers:
+(jurisdiction 0): wordcount+co-occur took 15mins 36 sec, read 19,139,873,394 bytes
+used 316 mappers, 32 reducers
+sort took 37 seconds for job 2, used 32 mappers, 1 reducer
+
+(court order, 1): took 22min 44sec, read S3N bytes: 19,139,852,920
+used 316 mappers, 32 reducers
+sort took 2mins 25sec, used 32 mappers, 1 reducer.
+
+(in my opinion, 2): took 38mins, 32 sec read 19139872574
+used 316 mappers, 32 reducers
+sort took 11 mins, 10 sec,  used 96 maps, 1 reducer
+
+I got an exception:
+"java.io.IOException: Got error in response to OP_READ_BLOCK self=/10.66.133.62:56023, remote=ec2-23-22-119-232.compute-1.amazonaws.com/10.66.133.62:50010 for file ec2-23-22-119-232.compute-1.amazonaws.com/10.66.133.62:50010:-285281428879040991 for block -285281428879040991_1220",
+but oddly I was still able to download my data. So I don't really understand what this exception means.
+
+______
+for 9 workers:
+
+(jurisdiction 0):
+wordcount+co-occur took 9mins, 8sec
+read 19,141,335,317 bytes
+used 316 mappers and 32 reducers
+sort took: 46 sec
+used 32 mappers 1 reducer
+
+Even more weirdly I got an exception for (jurisdiction, 0) on the 9 workers- (whereas I got an exception for (in my opinion, 2) on the 5 workers. I was also able to download the data from this job. And it matched the data I got for the 5 workers, so I am pretty sure it is correct data. Don't know what the exception means.
+
+
+(court order, 1):
+bytes read: 19,141,270,236
+Wordcount+Co-occur: 17mins, 58sec
+used 316 mappers 32 reducers
+Sort: 7mins, 34sec 32 maps 1 reduce
+
+(in my opinion, 2):
+Read: 19,141,378,146 bytes
+Wordcount+co-occur: 28mins, 4sec
+used 316 mappers and 32 reducers
+Sort: 43mins, 57sec (wow that took a while)
+96 mappers and 1 reducer
+
+
+3.    What was the median processing rate per GB (= 2^30 bytes)
+ of input for the tests using 5 workers?  Using 9 workers?
+
+How many seconds does it take me to process a gibibyte? = sec/GB
+
+5 workers:
+(jurisdiction 0):
+Wordcount + sort = (15*60 + 36) + 37)/(19,139,873,394/2^30)
+= 54.585 seconds
+
+(court order, 1):
+Wordcount + sort = (22*60 + 44) + (2*60 + 25))/(19,139,852,920/2^30)
+=84.65459
+
+(in my opinion, 2): 
+Wordcount + sort = (38*60 + 32) + (11*60 + 10))/(19,139,872,574/2^30)
+=167.289416729
+
+median: = 84.65 sec/GB
+
+___
+9 workers:
+(jurisdiction 0):
+Wordcount + sort = (9*60 + 8) + (46))/(19,141,335,317/2^30)
+= 33.320697
+
+(court order, 1):
+Wordcount + sort = (17*60 + 58) + (7*60 +34))/(19,141,270,236/2^30)
+= 85.9385
+
+(in my opinion, 2):
+Wordcount + sort = (28*60 + 4) + (43*60 +57))/(19,141,378,146/2^30)
+= 242.387898
+
+median: = 85.9 sec/GB
+
+
+4.    What percentage speedup did you get using 9 workers instead of 5? How well, in your opinion, does Hadoop parallelize your code?
+
+The mean was actually slower for 9 workers instead of 5. Some other people in the lab also had this problem. So, I'm inclined to believe that it was actually hadoop's problem and that they are terrible at parallelizing my code.
+More specifically: I'm inclined to believe that the problem comes from the sorting. The sorting is where the real time increace  happened. Perhaps having many machines need to pass data to the final reduce was where the real bottle neck occured.
+
+5.    What was the price per GB processed? (Recall that an extra-large instance costs $0.68 per hour, rounded up to the nearest hour.):
+I was on the machine for over three hours with 5 nodes and then again with 9 nodes, so I assume I got charged for (4h)(.68 $/h)(5 workers) + (4h)(.68 $/h)(9 workers) = 38.08$
+
+I processed about 6*17GB (17 because I'm using gibibytes rather than gigabytes)
+so $/GB = 2.7
+
+
+6.    How many dollars in EC2 credits did you use to complete this project? (Please don't use ec2-usage, as it tends to return bogus costs. You should work out the math yourself.)
+As from the previous answer I spent 38.08$ which = 38.08 credits.
+
+7.    Extra credit: did you use a combiner? What does it do, specifically, in your implementation?
+
+I did use a combiner. I passed one of those pair objects from my first map (I renamed it DoublePair, because I wanted to pass doubles instead of strings. The pair object included a value for the number of instances of the gram, and also a value associated with that gram. The first map only passed individual grams, so the combiner added the number of grams together, and also added the values of the grams together. What this does for my code is to parallelize the process of adding up the grams from the same document. Each map can do this work using the combiner, rather than forcing the single reducer to do much of the work. (although it looke like the amazon computers used 32 reducers for the first map.- (I guess it must do some sorting first in order to know which reducer to send it to).
+----
